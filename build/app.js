@@ -183,5 +183,17 @@ bot.dialog('/cheap-step-5', [function (session, result, next) {
     console.log(results.response);
     var response = results.response.entity;
     session.userData.selected.push(response);
-    session.endConversation();
+    session.beginDialog('/cheap-step-6');
 }]);
+
+bot.dialog('/cheap-step-6', [function (session, result, next) {
+    builder.Prompts.number(session, 'How old do you feel ?');
+}, function (session, results, next) {
+    var response = results.response;
+    session.userData.selected.push(response);
+    session.beginDialog('/final');
+}]);
+
+bot.dialog('/final', [function (session, result, next) {
+    session.endDialog('That is it, I will contact you ');
+}, function (session, results, next) {}]);
