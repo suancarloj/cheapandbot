@@ -105,10 +105,12 @@ bot.dialog('/cheap-casual', [
 /* Step cheap casual part */
 function (session, results, next) {
     session.send('What do you like to wear in your free time?');
+    session.endDialog();
 }, function (session, results, next) {}]);
 
 bot.dialog('/cheap-business', [
 /* Step cheap business part */
 function (session, results, next) {
     session.send('What do you like to wear in your free time?');
+    session.endDialog();
 }, function (session, results, next) {}]);
