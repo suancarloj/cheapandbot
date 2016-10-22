@@ -18,7 +18,9 @@ server.listen(PORT, function () {
 var recognizer = new builder.LuisRecognizer('https://api.projectoxford.ai/luis/v1/application?id=b1c4a2d5-5503-4faf-83cc-6ddf84345c14&subscription-key=a74853438484421ab06d0b8f174aa68c');
 
 // 
-var intents = new builder.IntentDialog({ recognizers: [recognizer] });
+var intents = new builder.IntentDialog({
+    recognizers: [recognizer]
+});
 
 // Create chat bot
 var connector = new builder.ChatConnector({
@@ -31,6 +33,7 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
+var baseUrl = 'https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture';
 //=========================================================
 // Bots Dialogs
 //=========================================================
@@ -76,7 +79,7 @@ bot.dialog('/cheap', [
 function (session) {
     session.send('What do you like to wear in your free time?');
     // Ask the user to select an item from a carousel.
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_e.pjpeg").tap(builder.CardAction.imBack(session, "select:100"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_d.pjpeg").tap(builder.CardAction.imBack(session, "select:101"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_c.pjpeg").tap(builder.CardAction.imBack(session, "select:102"))])]);
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, baseUrl + '/dt-2360_728x972_e.pjpeg').tap(builder.CardAction.postBack(session, "select:100"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, baseUrl + '/dt-2360_728x972_d.pjpeg').tap(builder.CardAction.postBack(session, "select:101"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, baseUrl + '/dt-2360_728x972_c.pjpeg').tap(builder.CardAction.postBack(session, "select:102"))])]);
     builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
 }, function (session, results, next) {
     var action, item;
@@ -93,7 +96,7 @@ bot.dialog('/cheap-step2', [/* Step 2*/
 function (session, results, next) {
     session.send("What do you wear to work? ");
 
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2045_728x972_business.pjpeg").tap(builder.CardAction.imBack(session, "business"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/work_relaxed_2.pjpeg").tap(builder.CardAction.imBack(session, "casual"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2045_728x972_modernclassic02.pjpeg").tap(builder.CardAction.imBack(session, "business"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/work_casual.pjpeg").tap(builder.CardAction.imBack(session, "casual"))])]);
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, "/dt-2045_728x972_business.pjpeg").tap(builder.CardAction.postBack(session, "business"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "/work_relaxed_2.pjpeg").tap(builder.CardAction.postBack(session, "casual"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "/dt-2045_728x972_modernclassic02.pjpeg").tap(builder.CardAction.postBack(session, "business"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "/work_casual.pjpeg").tap(builder.CardAction.postBack(session, "casual"))])]);
     builder.Prompts.choice(session, msg, "casual|business");
 }, function (session, results, next) {
     var response = results.response.entity;
@@ -107,7 +110,7 @@ bot.dialog('/cheap-step3', [/* Step 3 : Shoes*/
 function (session, results, next) {
     session.send("Which shoes would you wear?");
 
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_schuhe_sneakers.pjpeg").tap(builder.CardAction.imBack(session, "basket"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2438_schuhe_boat.pjpeg").tap(builder.CardAction.imBack(session, "sebago"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_schuhe_boots.pjpeg").tap(builder.CardAction.imBack(session, "boot"))]), new builder.HeroCard(session).subtitle("I don't like any of these shoes").images([builder.CardImage.create(session, "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png").tap(builder.CardAction.imBack(session, "dislike"))])]);
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, baseUrl + '/dt-2360_schuhe_sneakers.pjpeg').tap(builder.CardAction.postBack(session, "basket"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "/dt-2438_schuhe_boat.pjpeg").tap(builder.CardAction.postBack(session, "sebago"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, baseUrl + '/dt-2360_schuhe_boots.pjpeg').tap(builder.CardAction.postBack(session, "boot"))]), new builder.HeroCard(session).subtitle("I don't like any of these shoes").images([builder.CardImage.create(session, "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png").tap(builder.CardAction.postBack(session, "dislike"))])]);
     builder.Prompts.choice(session, msg, "basket|sebago|boot|dislike");
 }, function (session, results, next) {
     var response = results.response.entity;

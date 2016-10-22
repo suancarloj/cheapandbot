@@ -33,6 +33,7 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
+const baseUrl = 'https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture';
 //=========================================================
 // Bots Dialogs
 //=========================================================
@@ -86,19 +87,19 @@ bot.dialog('/cheap', [
             .attachments([
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_e.pjpeg").tap(builder.CardAction
-                        .imBack(session, "select:100")),
+                    builder.CardImage.create(session, `${baseUrl}/dt-2360_728x972_e.pjpeg`)
+                        .tap(builder.CardAction.postBack(session, "select:100")),
                 ]),
 
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_d.pjpeg")
-                    .tap(builder.CardAction.imBack(session, "select:101")),
+                    builder.CardImage.create(session, `${baseUrl}/dt-2360_728x972_d.pjpeg`)
+                        .tap(builder.CardAction.postBack(session, "select:101")),
                 ]),
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_c.pjpeg")
-                    .tap(builder.CardAction.imBack(session, "select:102")),
+                    builder.CardImage.create(session, `${baseUrl}/dt-2360_728x972_c.pjpeg`)
+                        .tap(builder.CardAction.postBack(session, "select:102")),
                 ]),
             ]);
         builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
@@ -126,27 +127,27 @@ bot.dialog('/cheap-step2', [ /* Step 2*/
             .attachments([
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2045_728x972_business.pjpeg")
+                    builder.CardImage.create(session, "/dt-2045_728x972_business.pjpeg")
                     .tap(builder.CardAction
-                        .imBack(session, "business")),
+                        .postBack(session, "business")),
                 ]),
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/work_relaxed_2.pjpeg")
+                    builder.CardImage.create(session, "/work_relaxed_2.pjpeg")
                     .tap(builder.CardAction
-                        .imBack(session, "casual")),
+                        .postBack(session, "casual")),
                 ]),
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2045_728x972_modernclassic02.pjpeg")
+                    builder.CardImage.create(session, "/dt-2045_728x972_modernclassic02.pjpeg")
                     .tap(builder.CardAction
-                        .imBack(session, "business")),
+                        .postBack(session, "business")),
                 ]),
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/work_casual.pjpeg")
+                    builder.CardImage.create(session, "/work_casual.pjpeg")
                     .tap(builder.CardAction
-                        .imBack(session, "casual")),
+                        .postBack(session, "casual")),
                 ]),
             ]);
         builder.Prompts.choice(session, msg, "casual|business");
@@ -170,28 +171,28 @@ bot.dialog('/cheap-step3', [ /* Step 3 : Shoes*/
             .attachments([
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_schuhe_sneakers.pjpeg")
+                    builder.CardImage.create(session, `${baseUrl}/dt-2360_schuhe_sneakers.pjpeg`)
                     .tap(builder.CardAction
-                        .imBack(session, "basket")),
+                        .postBack(session, "basket")),
                 ]),
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2438_schuhe_boat.pjpeg")
+                    builder.CardImage.create(session, "/dt-2438_schuhe_boat.pjpeg")
                     .tap(builder.CardAction
-                        .imBack(session, "sebago")),
+                        .postBack(session, "sebago")),
                 ]),
                 new builder.HeroCard(session)
                 .images([
-                    builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_schuhe_boots.pjpeg")
+                    builder.CardImage.create(session, `${baseUrl}/dt-2360_schuhe_boots.pjpeg`)
                     .tap(builder.CardAction
-                        .imBack(session, "boot")),
+                        .postBack(session, "boot")),
                 ]),
                 new builder.HeroCard(session)
                 .subtitle("I don't like any of these shoes")
                 .images([
                     builder.CardImage.create(session, "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png")
                     .tap(builder.CardAction
-                        .imBack(session, "dislike")),
+                        .postBack(session, "dislike")),
                 ]),
             ]);
         builder.Prompts.choice(session, msg, "basket|sebago|boot|dislike");
