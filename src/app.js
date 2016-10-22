@@ -116,5 +116,4 @@ bot.dialog('/cheap', [
         }
         session.endDialog('You %s "%s"', action, item);
     }    
-    }
 ]);
