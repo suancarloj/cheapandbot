@@ -67,7 +67,7 @@ var heroCardBuilder = function heroCardBuilder(session) {
 };
 
 bot.use({
-    firstRun: function firstRun(session, next) {
+    botbuilder: function botbuilder(session, next) {
         console.log(session);
         if (session.message.text === '/deleteprofile') {
             console.log('delte profile');

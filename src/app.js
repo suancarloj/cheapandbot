@@ -67,7 +67,7 @@ const heroCardBuilder = (session) => (image) => {
 
 
 bot.use({
-    firstRun: function (session, next) {
+    botbuilder: function (session, next) {
         console.log(session)
         if (session.message.text === '/deleteprofile') {
             console.log('delte profile')
