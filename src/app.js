@@ -176,7 +176,7 @@ bot.dialog('/cheap-casual', [
 
 ]);
 
-bot.dialog('/cheap-casual', [
+bot.dialog('/cheap-business', [
     /* Step cheap business part */
     function (session) {
         session.send('What do you like to wear in your free time?');
