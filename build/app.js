@@ -36,19 +36,58 @@ server.post('/api/messages', connector.listen());
 //=========================================================
 
 
-bot.dialog('/', intents);
+// bot.dialog('/', intents);
 
-intents.onBegin(function (session, args, next) {
-    // session.dialogData.name = args.name;
-    session.send("hi !");
-    next();
-});
+// intents.onBegin(function (session, args, next) {
+//     // session.dialogData.name = args.name;
+//     session.send("hi !");
+//     next();
+// });
 
-intents.matches('BuyWear', [function (session, args) {
-    builder.Prompts.text(session, "What kind of wear do you want to buy today ?");
-    console.log('args', args);
-    var item = builder.EntityRecognizer.findEntity(args.entities, "shoes");
-    console.log('item', item);
+// intents.matches('BuyWear', [function (session, args) {
+//     builder.Prompts.text(session, "What kind of wear do you want to buy today ?");
+//     console.log('args', args);
+//     var item = builder.EntityRecognizer.findEntity(args.entities, "shoes");
+//     console.log('item', item);
+// }]);
+
+// intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
+
+
+bot.dialog('/', [function (session) {
+    builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
+}, function (session, results) {
+    var response = results.response;
+    if (response === "No") {
+        session.endDialog();
+    } else {
+        session.beginDialog('/cheap');
+    }
 }]);
 
-intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
+bot.dialog('/cheap', [function (session) {
+    session.send('What do you like to wear in your free time?');
+    // Ask the user to select an item from a carousel.
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.CardImage(session).url("https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_e.pjpeg").postBack(session, "select:102", "Select")]);
+    builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
+}, function (session, results) {
+    var action, item;
+    var kvPair = results.response.entity.split(':');
+    switch (kvPair[0]) {
+        case 'select':
+            action = 'selected';
+            break;
+    }
+    switch (kvPair[1]) {
+        case '100':
+            item = "the Space Needle";
+            break;
+        case '101':
+            item = "Pikes Place Market";
+            break;
+        case '102':
+            item = "the EMP Museum";
+            break;
+    }
+    session.endDialog('You %s "%s"', action, item);
+}]);
