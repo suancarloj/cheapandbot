@@ -1,5 +1,5 @@
 'use strict';
-console.log('Launch server')
+
 var restify = require('restify');
 var builder = require('botbuilder');
 var request = require('request');
@@ -11,7 +11,7 @@ var request = require('request');
 // Setup Restify Server
 var server = restify.createServer();
 var PORT = process.env.port || process.env.PORT || 3978;
-console.log(PORT);
+
 server.listen(PORT, function () {
     console.log('%s listening to %s', server.name, server.url);
 });
@@ -257,46 +257,46 @@ bot.dialog('/final', [
     }
 ])
 
-// const uploadSpeech = (fileUrl, language, API_USER_ID, token, cb) => {
-//     var formData = {
-//   	    diarisation: 'true',
-//   	    model: language,
-//    	    data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
-//    	    notification: 'callback',
-//    	    callback: argv.c
-// 	}
+    // const uploadSpeech = (fileUrl, language, API_USER_ID, token, cb) => {
+    //     var formData = {
+    //   	    diarisation: 'true',
+    //   	    model: language,
+    //    	    data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
+    //    	    notification: 'callback',
+    //    	    callback: argv.c
+    // 	}
 
-// 	//API CALL: Upload file for transcription.
-// 	var apiUploadURL = 'https://api.speechmatics.com/v1.0/user/' + API_USER_ID + '/jobs/?auth_token=' + token;
+    // 	//API CALL: Upload file for transcription.
+    // 	var apiUploadURL = 'https://api.speechmatics.com/v1.0/user/' + API_USER_ID + '/jobs/?auth_token=' + token;
 
-// 	request.post({url: apiUploadURL, formData: formData}, function (error, response, body) {
-// 	    if (error) {
-//             console.log('\nREQUEST ERROR:', error);
-//             cb(error ,null);
-// 	        return ;
-// 	    }
+    // 	request.post({url: apiUploadURL, formData: formData}, function (error, response, body) {
+    // 	    if (error) {
+    //             console.log('\nREQUEST ERROR:', error);
+    //             cb(error ,null);
+    // 	        return ;
+    // 	    }
 
-// 	    try {
-// 	        var json = JSON.parse(body);
-// 	        if (json['error']) {
-//                  console.log('\nAPI ERROR', json['error']);
-//                  cb(json['error'],null);
-//                  return ;
-// 	        }
-//             console.log('#########################################################')
-//             console.log('response speech',json)
-//             console.log('#########################################################')
-//             cb(null, json);
-// 	    } catch (parseError) {
-//              console.log('\nPARSE ERROR', parseError);
-//              cb(parseError,null);
-// 	        return ;
-// 	    }
+    // 	    try {
+    // 	        var json = JSON.parse(body);
+    // 	        if (json['error']) {
+    //                  console.log('\nAPI ERROR', json['error']);
+    //                  cb(json['error'],null);
+    //                  return ;
+    // 	        }
+    //             console.log('#########################################################')
+    //             console.log('response speech',json)
+    //             console.log('#########################################################')
+    //             cb(null, json);
+    // 	    } catch (parseError) {
+    //              console.log('\nPARSE ERROR', parseError);
+    //              cb(parseError,null);
+    // 	        return ;
+    // 	    }
 
-// 	    console.log('\nSpeechmatics job uploaded. Job ID:', json['id']);
-// 	});
+    // 	    console.log('\nSpeechmatics job uploaded. Job ID:', json['id']);
+    // 	});
 
-// }
+    // }
 bot.dialog('/speech', [
     function(session, result, next){
         builder.Prompts.attachment(session, "Upload a audio for me to transform.");
