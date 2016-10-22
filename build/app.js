@@ -64,6 +64,15 @@ var heroCardBuilder = function heroCardBuilder(image) {
     return card.images([builder.CardImage.create(session, image.url)]).buttons([builder.CardAction.imBack(session, image.value, "Select")]);
 };
 
+bot.use(function (session, next) {
+    if (session.message.text === '/deleteprofile') {
+        session.perUserInConversationData = {};
+        session.userData = {};
+        session.conversationData = {};
+    }
+    next();
+});
+
 bot.dialog('/', [function (session) {
     if (session.userData.firstTime) {
         builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');

@@ -66,6 +66,15 @@ const heroCardBuilder = (image) => {
 };
 
 
+bot.use(function (session, next) {
+  if (session.message.text === '/deleteprofile') {
+    session.perUserInConversationData = {};
+    session.userData = {};
+    session.conversationData = {};
+  }
+  next();
+});
+
 bot.dialog('/', [
     function (session) {
         if (session.userData.firstTime) {
