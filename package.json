@@ -1,29 +1,30 @@
 {
-  "name": "echobot",
+  "name": "hackathon2016",
   "version": "1.0.0",
-  "description": "A sample bot for getting started with Bot Framework",
-  "main": "server.js",
-  "engines":{
-    "node": "6.x.x"
-  },
+  "description": "Cheap@ndBot",
+  "main": "build/app.js",
   "scripts": {
-    "test": ""
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fuselabs/echobot.git"
+    "start": "npm run build & nodemon -w ./build ./build/app.js",
+    "build": "babel src -d build --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "botframework"
+    "Bot",
+    "cheap",
+    "deals"
   ],
-  "author": "Fuse Labs",
+  "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/fuselabs/echobot/issues"
+  "engines": {
+    "node": "6.x.x"
   },
-  "homepage": "https://github.com/fuselabs/echobot#readme",
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
+    "nodemon": "^1.11.0"
+  },
   "dependencies": {
-    "botbuilder": "^0.6.5",
-    "restify": "^4.0.4"
+    "botbuilder": "^3.3.3",
+    "restify": "^4.1.1"
   }
 }
