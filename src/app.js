@@ -56,11 +56,17 @@ server.post('/api/messages', connector.listen());
 
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
+        if(session.userData.firstTime){
+             builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
+        }
+        else{
+            session.send('Welcome back Sir,  Are your looking for a new outfit ?');
+            next();
+        }
     },
     function (session, results) {
         const response = results.response;
-        console.log("Response ",response);
+        //console.log("Response ",response);
         if(!response){
             session.endDialog();
         }
@@ -69,7 +75,6 @@ bot.dialog('/', [
         }
     }
 ]);
-
 
 bot.dialog('/cheap', [
     /* Step 1 */
@@ -81,28 +86,20 @@ bot.dialog('/cheap', [
             .attachments([
                 new builder.HeroCard(session)
                     .images([
-                        builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_e.pjpeg")
-                            .tap(builder.CardAction.showImage(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_e.pjpeg")),
-                    ])
-                    .buttons([
-                        builder.CardAction.imBack(session, "select:100", "Select")
+                        builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_e.pjpeg").tap(builder.CardAction
+                                    .imBack(session, "select:100")),
                     ]),
+                           
                 new builder.HeroCard(session)
                     .images([
                         builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_d.pjpeg")
-                            .tap(builder.CardAction.showImage(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_d.pjpeg")),
-                    ])
-                    .buttons([
-                        builder.CardAction.imBack(session, "select:101", "Select")
+                            .tap(builder.CardAction.imBack(session, "select:101")),
                     ]),
                 new builder.HeroCard(session)
                     .images([
                         builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_c.pjpeg")
-                            .tap(builder.CardAction.showImage(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_728x972_c.pjpeg"))
-                    ])
-                    .buttons([
-                        builder.CardAction.imBack(session, "select:102", "Select")
-                    ])
+                            .tap(builder.CardAction.imBack(session, "select:102")),
+                    ]),
             ]);
         builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
     },
@@ -113,9 +110,14 @@ bot.dialog('/cheap', [
              session.userData.selected = [];
         }
         session.userData.selected.push(kvPair[1]);
+        session.userData.firstTime= false;
         next();     
     },
-    /* Step 2*/
+    ...step2,
+
+]);
+
+bot.dialog('/cheap-step2',[/* Step 2*/
     function(session, results, next){
          session.send("What do you wear to work? ")
 
@@ -160,31 +162,66 @@ bot.dialog('/cheap', [
         }else{
             session.beginDialog('/cheap-business');
         }
-    },
+    }
 ]);
 
+bot.dialog('/cheap-step3',[/* Step 3 : Shoes*/
+    function(session, results, next){
+         session.send("Which shoes would you wear?")
 
-bot.dialog('/cheap-casual', [
-    /* Step cheap casual part */
-    function (session, results, next) {
-        session.send('What do you like to wear in your free time?');
-                     session.endDialog();
-
+        const msg = new builder.Message(session)
+            .attachmentLayout(builder.AttachmentLayout.carousel)
+            .attachments([
+                new builder.HeroCard(session)
+                    .images([
+                        builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_schuhe_sneakers.pjpeg")
+                            .tap(builder.CardAction
+                                    .imBack(session, "basket")),
+                    ]),
+                new builder.HeroCard(session)
+                    .images([
+                        builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2438_schuhe_boat.pjpeg")
+                            .tap(builder.CardAction
+                                    .imBack(session, "sebago")),
+                    ]),
+                new builder.HeroCard(session)
+                    .images([
+                        builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2360_schuhe_boots.pjpeg")
+                            .tap(builder.CardAction
+                                    .imBack(session, "boot")),
+                    ]),
+                new builder.HeroCard(session)
+                    .subtitle("I don't like any of these shoes")
+                    .images([
+                        builder.CardImage.create(session, "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png")
+                            .tap(builder.CardAction
+                                    .imBack(session, "dislike")),
+                    ]),
+            ]);
+       builder.Prompts.choice(session, msg, "basket|sebago|boot|dislike");
     },
     function (session, results, next) {
-         
-    },
-]);
+        const response = results.response.entity;
+        
+        if(response !== 'dislike'){
+             session.beginDialog('/cheap-step4');
+        }
 
-bot.dialog('/cheap-business', [
-    /* Step cheap business part */
-    function(session, results, next) {
-        session.send('What do you like to wear in your free time?');
-                     session.endDialog();
-
+        session.send('Oh daam, we feel bad that you find nothing :( ')
+        builder.Prompts.confirm(session, 'So, Could you specify what kinds of shoes you like ?');   
     },
     function (session, results, next) {
-         
-    },
+        session.send('Thanks for the informations, we will use it');
+        const response = results.response;
+         session.userData.selected.push(response);
+         session.send('Great we can continue the inception');
+         session.beginDialog('/cheap-step4');
+    }
+])
 
-]);
+bot.dialog('/cheap-step4',[
+    function(session, result,next){
+        session.send('Welcome step 4');
+         session.endConversation()
+    }
+])
