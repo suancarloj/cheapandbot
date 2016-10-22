@@ -61,7 +61,7 @@ bot.dialog('/', [
     function (session, results) {
         const response = results.response;
         console.log("Response ",response);
-        if(response.toLowerCase() ==="no"){
+        if(!response){
             session.endDialog();
         }
         else{

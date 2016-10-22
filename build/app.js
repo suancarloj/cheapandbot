@@ -59,7 +59,7 @@ bot.dialog('/', [function (session) {
 }, function (session, results) {
     var response = results.response;
     console.log("Response ", response);
-    if (response.toLowerCase() === "no") {
+    if (!response) {
         session.endDialog();
     } else {
         session.beginDialog('/cheap');
