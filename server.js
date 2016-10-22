@@ -12,6 +12,7 @@ var bot = new builder.BotConnectorBot(botConnectorOptions);
 bot.add('/', function (session) {
     
     //respond with user's message
+    console.log('message received')
     session.send("You said " + session.message.text);
 });
 
@@ -19,7 +20,7 @@ bot.add('/', function (session) {
 var server = restify.createServer();
 
 // Handle Bot Framework messages
-server.post('/api/messages', bot.verifyBotFramework(), bot.listen());
+server.post('/api/messages', bot.listen());
 
 // Serve a static web page
 server.get(/.*/, restify.serveStatic({
