@@ -56,6 +56,17 @@ const baseUrl = 'https://www.outfittery.com/funnels/new/img/thumb__questionnaire
 
 // intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
+const heroCardBuilder = (image) => {
+    const card = new builder.HeroCard(session);
+    if (image.subtitle) {
+        card.subtitle(image.subtitle);
+    }
+    return card.images([
+            builder.CardImage.create(session, image.url)
+            .tap(builder.CardAction.postBack(session, image.value)),
+        ]);
+};
+
 
 bot.dialog('/', [
     function (session) {
@@ -82,26 +93,14 @@ bot.dialog('/cheap', [
     function (session) {
         session.send('What do you like to wear in your free time?');
         // Ask the user to select an item from a carousel.
+        const images = [
+            { url: `${baseUrl}/dt-2360_728x972_e.pjpeg`, value: 'select:100' },
+            { url: `${baseUrl}/dt-2360_728x972_d.pjpeg`, value: 'select:101' },
+            { url: `${baseUrl}/dt-2360_728x972_c.pjpeg`, value: 'select:102' },
+        ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments([
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, `${baseUrl}/dt-2360_728x972_e.pjpeg`)
-                        .tap(builder.CardAction.postBack(session, "select:100")),
-                ]),
-
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, `${baseUrl}/dt-2360_728x972_d.pjpeg`)
-                        .tap(builder.CardAction.postBack(session, "select:101")),
-                ]),
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, `${baseUrl}/dt-2360_728x972_c.pjpeg`)
-                        .tap(builder.CardAction.postBack(session, "select:102")),
-                ]),
-            ]);
+            .attachments(images.map(heroCardBuilder));
         builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
     },
     function (session, results, next) {
@@ -121,35 +120,15 @@ bot.dialog('/cheap', [
 bot.dialog('/cheap-step2', [ /* Step 2*/
     function (session, results, next) {
         session.send("What do you wear to work? ")
-
+        const images = [            
+            { url: `${baseUrl}/dt-2045_728x972_business.pjpeg`, value: 'business' },
+            { url: `${baseUrl}/work_relaxed_2.pjpeg`, value: 'casual' },
+            { url: `${baseUrl}/dt-2045_728x972_modernclassic02.pjpeg`, value: 'business' },
+            { url: `${baseUrl}/work_casual.pjpeg`, value: 'casual' }
+        ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments([
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, "/dt-2045_728x972_business.pjpeg")
-                    .tap(builder.CardAction
-                        .postBack(session, "business")),
-                ]),
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, "/work_relaxed_2.pjpeg")
-                    .tap(builder.CardAction
-                        .postBack(session, "casual")),
-                ]),
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, "/dt-2045_728x972_modernclassic02.pjpeg")
-                    .tap(builder.CardAction
-                        .postBack(session, "business")),
-                ]),
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, "/work_casual.pjpeg")
-                    .tap(builder.CardAction
-                        .postBack(session, "casual")),
-                ]),
-            ]);
+            .attachments(images.map(heroCardBuilder));
         builder.Prompts.choice(session, msg, "casual|business");
     },
     function (session, results, next) {
@@ -165,36 +144,15 @@ bot.dialog('/cheap-step2', [ /* Step 2*/
 bot.dialog('/cheap-step3', [ /* Step 3 : Shoes*/
     function (session, results, next) {
         session.send("Which shoes would you wear?")
-
+        const images = [
+            { url: `${baseUrl}/dt-2360_schuhe_sneakers.pjpeg`, value: 'basket' },
+            { url: `${baseUrl}/dt-2438_schuhe_boat.pjpeg`, value: 'sebago' },
+            { url: `${baseUrl}/dt-2360_schuhe_boots.pjpeg`, value: 'boot' },
+            { url: "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png", subtitle: "I don't like any of these shoes", value: 'dislike' }
+        ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments([
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, `${baseUrl}/dt-2360_schuhe_sneakers.pjpeg`)
-                    .tap(builder.CardAction
-                        .postBack(session, "basket")),
-                ]),
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, "/dt-2438_schuhe_boat.pjpeg")
-                    .tap(builder.CardAction
-                        .postBack(session, "sebago")),
-                ]),
-                new builder.HeroCard(session)
-                .images([
-                    builder.CardImage.create(session, `${baseUrl}/dt-2360_schuhe_boots.pjpeg`)
-                    .tap(builder.CardAction
-                        .postBack(session, "boot")),
-                ]),
-                new builder.HeroCard(session)
-                .subtitle("I don't like any of these shoes")
-                .images([
-                    builder.CardImage.create(session, "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png")
-                    .tap(builder.CardAction
-                        .postBack(session, "dislike")),
-                ]),
-            ]);
+            .attachments(images.map(heroCardBuilder));
         builder.Prompts.choice(session, msg, "basket|sebago|boot|dislike");
     },
     function (session, results, next) {
