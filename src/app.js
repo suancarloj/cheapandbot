@@ -302,15 +302,15 @@ bot.dialog('/speech',[
         builder.Prompts.attachment(session, "Upload a audio for me to transform.");
     },
     function(session,result, next){
-        console.log("res",result.response);
-
-        uploadSpeech(result.response.contentUrl,'en-US',8967 ,'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw ',(err,res)=>{
-            if(err){
-                sessiond.send("We had a error to upload ")
-            }else{
-                session.send(' Success ', JSON.stringify(res,null,2));
-            }
-        });
+        console.log("res", result.response);
+        // const token = 'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw';
+        // uploadSpeech(result.response.contentUrl,'en-US', 8967, token, (err,res) => {
+        //     if (err) {
+        //         sessiond.send("We had a error to upload ")
+        //     } else {
+        //         session.send(' Success ', JSON.stringify(res,null,2));
+        //     }
+        // });
         //session.endDialog('That is it, I will contact you ');
     }
 ])
