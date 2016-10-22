@@ -1,7 +1,5 @@
 'use strict';
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 var restify = require('restify');
 var builder = require('botbuilder');
 
@@ -88,8 +86,8 @@ function (session) {
     }
     session.userData.selected.push(kvPair[1]);
     session.userData.firstTime = false;
-    next();
-}].concat(_toConsumableArray(step2)));
+    session.beginDialog('/cheap-step4');
+}]);
 
 bot.dialog('/cheap-step2', [/* Step 2*/
 function (session, results, next) {
@@ -102,12 +100,7 @@ function (session, results, next) {
     var CASUAL = 'casual';
     var business = 'business';
     session.userData.selected.push(response);
-
-    if (response === CASUAL) {
-        session.beginDialog('/cheap-casual');
-    } else {
-        session.beginDialog('/cheap-business');
-    }
+    session.beginDialog('/cheap-step3');
 }]);
 
 bot.dialog('/cheap-step3', [/* Step 3 : Shoes*/

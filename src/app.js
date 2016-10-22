@@ -111,9 +111,9 @@ bot.dialog('/cheap', [
         }
         session.userData.selected.push(kvPair[1]);
         session.userData.firstTime= false;
-        next();     
+         session.beginDialog('/cheap-step4');
+    
     },
-    ...step2,
 
 ]);
 
@@ -156,12 +156,8 @@ bot.dialog('/cheap-step2',[/* Step 2*/
         const CASUAL ='casual';
         const business = 'business'
         session.userData.selected.push(response);
-
-        if(response === CASUAL){
-            session.beginDialog('/cheap-casual');
-        }else{
-            session.beginDialog('/cheap-business');
-        }
+         session.beginDialog('/cheap-step3');
+       
     }
 ]);
 
