@@ -53,20 +53,8 @@ server.post('/api/messages', connector.listen());
 
 // intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
-bot.dialog('/', [
-    function (session, args, next) {
-        if (!session.userData.name) {
-            session.beginDialog('/profile');
-        } else {
-            next();
-        }
-    },
-    function (session, results) {
-        session.send('Hello %s!', session.userData.name);
-    }
-]);
 
-bot.dialog('/profile', [
+bot.dialog('/', [
     function (session) {
         builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
     },
