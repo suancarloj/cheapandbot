@@ -56,7 +56,7 @@ const baseUrl = 'https://www.outfittery.com/funnels/new/img/thumb__questionnaire
 
 // intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
-const heroCardBuilder = (image) => {
+const heroCardBuilder = (session) => (image) => {
     const card = new builder.HeroCard(session);
     if (image.subtitle) {
         card.subtitle(image.subtitle);
@@ -67,7 +67,9 @@ const heroCardBuilder = (image) => {
 
 
 bot.use(function (session, next) {
+    console.log(session)
   if (session.message.text === '/deleteprofile') {
+      console.log('delte profile')
     session.perUserInConversationData = {};
     session.userData = {};
     session.conversationData = {};
@@ -107,7 +109,7 @@ bot.dialog('/cheap', [
         ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder));
+            .attachments(images.map(heroCardBuilder(session)));
         builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
     },
     function (session, results, next) {
@@ -135,7 +137,7 @@ bot.dialog('/cheap-step2', [ /* Step 2*/
         ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder));
+            .attachments(images.map(heroCardBuilder(session)));
         builder.Prompts.choice(session, msg, "casual|business");
     },
     function (session, results, next) {
@@ -159,7 +161,7 @@ bot.dialog('/cheap-step3', [ /* Step 3 : Shoes*/
         ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder));
+            .attachments(images.map(heroCardBuilder(session)));
         builder.Prompts.choice(session, msg, "basket|sebago|boot|dislike");
     },
     function (session, results, next) {
