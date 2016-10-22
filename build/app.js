@@ -57,13 +57,20 @@ var baseUrl = 'https://www.outfittery.com/funnels/new/img/thumb__questionnaire_p
 // intents.onDefault(builder.DialogAction.send("I'm sorry. I didn't understand."));
 
 var heroCardBuilder = function heroCardBuilder(session) {
+    var buttonText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Select';
     return function (image) {
         var card = new builder.HeroCard(session);
         if (image.subtitle) {
             card.subtitle(image.subtitle);
         }
-        return card.images([builder.CardImage.create(session, image.url)]).buttons([builder.CardAction.imBack(session, image.value, "Select")]);
+        return card.images([builder.CardImage.create(session, image.url)]).buttons([builder.CardAction.imBack(session, image.value, buttonText)]);
     };
+};
+
+var getImageValues = function getImageValues(images) {
+    return images.map(function (image) {
+        return image.value;
+    }).join('|');
 };
 
 bot.use({
@@ -135,12 +142,11 @@ function (session, results, next) {
     session.send("Which shoes would you wear?");
     var images = [{ url: baseUrl + '/dt-2360_schuhe_sneakers.pjpeg', value: 'basket' }, { url: baseUrl + '/dt-2438_schuhe_boat.pjpeg', value: 'sebago' }, { url: baseUrl + '/dt-2360_schuhe_boots.pjpeg', value: 'boot' }, { url: "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png", subtitle: "I don't like any of these shoes", value: 'dislike' }];
     var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session)));
-    builder.Prompts.choice(session, msg, "basket|sebago|boot|dislike");
+    builder.Prompts.choice(session, msg, getImageValues(images));
 }, function (session, results, next) {
     var response = results.response.entity;
 
     if (response !== 'dislike') {
-        session.endDialog();
         session.beginDialog('/cheap-step4');
     }
 
@@ -155,6 +161,27 @@ function (session, results, next) {
 }]);
 
 bot.dialog('/cheap-step4', [function (session, result, next) {
-    session.send('Welcome step 4');
+    session.send('What would you never wear?');
+    var images = [{ url: baseUrl + '/dt-2360_bittenicht_polo.pjpeg', value: 'polo' }, { url: baseUrl + '/dt-2360_bitte-nicht-teile_coloured-chino.pjpeg', value: 'chino' }, { url: baseUrl + '/dt-2438_bittenicht_shorts.pjpeg', value: 'shorts' }, { url: baseUrl + '/dt-2360_bittenicht_bottom-down.pjpeg', value: 'down' }];
+
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'Never')));
+    builder.Prompts.choice(session, msg, getImageValues(images));
+    // session.endConversation()
+}, function (session, results, next) {
+    var response = results.response.entity;
+    session.userData.selected.push(response);
+    session.beginDialog('/cheap-step-5');
+}]);
+
+bot.dialog('/cheap-step-5', [function (session, result, next) {
+    session.send('Which brands do you like?');
+    var images = [{ url: baseUrl + '/dt-2360_bittenicht_bottom-down.pjpeg', value: 'bottom-down' }, { url: baseUrl + '/_0055_lee.pjpeg', value: 'lee' }, { url: baseUrl + '/_0040_gstar_raw.pjpeg', value: 'gstar-raw' }, { url: baseUrl + '/_0032_tommy_hilfiger.pjpeg', value: 'tommy-hilfiger' }];
+
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'Favorite')));
+    builder.Prompts.choice(session, msg, getImageValues(images));
+}, function (session, results, next) {
+    console.log(results.response);
+    var response = results.response.entity;
+    session.userData.selected.push(response);
     session.endConversation();
 }]);
