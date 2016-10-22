@@ -60,6 +60,7 @@ bot.dialog('/', [
     },
     function (session, results) {
         const response = results.response;
+        console.log("Response ",response);
         if(response.toLowerCase() ==="no"){
             session.endDialog();
         }
@@ -159,7 +160,6 @@ bot.dialog('/cheap', [
         }else{
             session.beginDialog('/cheap-business');
         }
-
     },
 ]);
 
@@ -173,7 +173,6 @@ bot.dialog('/cheap-casual', [
     function (session, results, next) {
          
     },
-
 ]);
 
 bot.dialog('/cheap-business', [

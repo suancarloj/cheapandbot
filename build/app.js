@@ -58,6 +58,7 @@ bot.dialog('/', [function (session) {
     builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
 }, function (session, results) {
     var response = results.response;
+    console.log("Response ", response);
     if (response.toLowerCase() === "no") {
         session.endDialog();
     } else {
