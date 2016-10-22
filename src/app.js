@@ -304,7 +304,7 @@ bot.dialog('/speech', [
     function(session,result, next){
         console.log("res", result.response);
         const token = 'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw';
-        uploadSpeech(result.response.contentUrl,'en-US', 8967, token, (err,res) => {
+        uploadSpeech(result.response[0].contentUrl,'en-US', 8967, token, (err,res) => {
             if (err) {
                 sessiond.send("We had a error to upload ")
             } else {

@@ -245,7 +245,7 @@ bot.dialog('/speech', [function (session, result, next) {
 }, function (session, result, next) {
     console.log("res", result.response);
     var token = 'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw';
-    uploadSpeech(result.response.contentUrl, 'en-US', 8967, token, function (err, res) {
+    uploadSpeech(result.response[0].contentUrl, 'en-US', 8967, token, function (err, res) {
         if (err) {
             sessiond.send("We had a error to upload ");
         } else {
