@@ -59,7 +59,7 @@ bot.dialog('/', [function (session) {
         builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
     } else {
         session.send('Welcome back Sir,  Are your looking for a new outfit ?');
-        next();
+        session.beginDialog('/cheap');
     }
 }, function (session, results) {
     var response = results.response;

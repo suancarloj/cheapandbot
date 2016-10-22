@@ -61,7 +61,7 @@ bot.dialog('/', [
         }
         else{
             session.send('Welcome back Sir,  Are your looking for a new outfit ?');
-            next();
+            session.beginDialog('/cheap');
         }
     },
     function (session, results) {
