@@ -173,10 +173,10 @@ bot.dialog('/cheap-step3', [ /* Step 3 : Shoes*/
 
         if (response !== 'dislike') {
             session.beginDialog('/cheap-step4');
+        } else {
+            session.send('Oh daam, we feel bad that you find nothing :( ')
+            builder.Prompts.text(session, 'So, Could you specify what kinds of shoes you like ?');
         }
-
-        session.send('Oh daam, we feel bad that you find nothing :( ')
-        builder.Prompts.text(session, 'So, Could you specify what kinds of shoes you like ?');
     },
     function (session, results, next) {
         session.send('Thanks for the informations, we will use it');
@@ -214,7 +214,7 @@ bot.dialog('/cheap-step-5', [
     function (session, result, next) {
         session.send('Which brands do you like?')
         const images = [
-            { url: `${baseUrl}/dt-2360_bittenicht_bottom-down.pjpeg`, value: 'bottom-down'},  
+            { url: `${baseUrl}/_0038_bugatti.pjpeg`, value: 'bugatti'},  
             { url: `${baseUrl}/_0055_lee.pjpeg`, value: 'lee'},
             { url: `${baseUrl}/_0040_gstar_raw.pjpeg`, value: 'gstar-raw'},
             { url: `${baseUrl}/_0032_tommy_hilfiger.pjpeg`, value: 'tommy-hilfiger'},
