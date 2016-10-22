@@ -113,6 +113,7 @@ function (session, results, next) {
     var response = results.response.entity;
 
     if (response !== 'dislike') {
+        session.endDialog();
         session.beginDialog('/cheap-step4');
     }
 

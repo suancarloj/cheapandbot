@@ -200,6 +200,7 @@ bot.dialog('/cheap-step3',[/* Step 3 : Shoes*/
         const response = results.response.entity;
         
         if(response !== 'dislike'){
+            session.endDialog();
              session.beginDialog('/cheap-step4');
         }
 
