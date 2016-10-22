@@ -88,11 +88,12 @@ bot.use({
 });
 
 bot.dialog('/', [function (session) {
+
     if (session.userData.firstTime) {
         builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
     } else {
         session.send('Welcome back Sir,  Are your looking for a new outfit ?');
-        session.beginDialog('/cheap');
+        session.beginDialog('/speech');
     }
 }, function (session, results) {
     var response = results.response;
@@ -100,7 +101,7 @@ bot.dialog('/', [function (session) {
     if (!response) {
         session.endDialog();
     } else {
-        session.beginDialog('/cheap');
+        session.beginDialog('/speech');
     }
 }]);
 
@@ -197,3 +198,10 @@ bot.dialog('/cheap-step-6', [function (session, result, next) {
 bot.dialog('/final', [function (session, result, next) {
     session.endDialog('That is it, I will contact you ');
 }, function (session, results, next) {}]);
+
+bot.dialog('/speech', [function (session, result, next) {
+    builder.Prompts.attachment(session, "Upload a audio for me to transform.");
+}, function (session, result, next) {
+    console.log("res", result.response);
+    session.endDialog('That is it, I will contact you ');
+}]);
