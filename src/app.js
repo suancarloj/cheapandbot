@@ -61,10 +61,8 @@ const heroCardBuilder = (image) => {
     if (image.subtitle) {
         card.subtitle(image.subtitle);
     }
-    return card.images([
-            builder.CardImage.create(session, image.url)
-            .tap(builder.CardAction.postBack(session, image.value)),
-        ]);
+    return card.images([builder.CardImage.create(session, image.url)])
+        .buttons([builder.CardAction.imBack(session, image.value, "Select")])
 };
 
 
