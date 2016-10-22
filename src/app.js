@@ -263,12 +263,12 @@ const uploadSpeech = (fileUrl, language, API_USER_ID, token, cb) => {
         diarisation: 'true',
         model: language,
         data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
-        notification: 'callback',
-        callback: argv.c
+        notification: 'none',
+        // callback: argv.c,
     }
 
     //API CALL: Upload file for transcription.
-    var apiUploadURL = 'https://api.speechmatics.com/v1.0/user/' + API_USER_ID + '/jobs/?auth_token=' + token;
+    var apiUploadURL = `https://api.speechmatics.com/v1.0/user/${API_USER_ID}/jobs/?auth_token=${token}`;
 
     request.post({url: apiUploadURL, formData: formData}, function (error, response, body) {
         if (error) {

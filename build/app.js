@@ -207,8 +207,7 @@ var uploadSpeech = function uploadSpeech(fileUrl, language, API_USER_ID, token, 
         diarisation: 'true',
         model: language,
         data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
-        notification: 'callback',
-        callback: argv.c
+        notification: 'none'
     };
 
     //API CALL: Upload file for transcription.
