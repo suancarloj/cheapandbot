@@ -65,15 +65,15 @@ const heroCardBuilder = (session) => (image) => {
         .buttons([builder.CardAction.imBack(session, image.value, "Select")])
 };
 
-
 bot.use({
-    botbuilder: function (session, next) {
-        console.log(session)
+    botbuilder: function botbuilder(session, next) {
         if (session.message.text === '/deleteprofile') {
-            console.log('delte profile')
+            session.reset();
             session.perUserInConversationData = {};
             session.userData = {};
             session.conversationData = {};
+            session.sessionState = {};
+            session.save();
         }
         next();
     }
