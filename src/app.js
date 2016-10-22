@@ -262,7 +262,7 @@ const uploadSpeech = (fileUrl, language, API_USER_ID, token, cb) => {
     var formData = {
         diarisation: 'true',
         model: language,
-        data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
+        data_file: request(fileUrl).pipe(fs.createWriteStream('../song.mp4')),
         notification: 'none',
         // callback: argv.c,
     }
