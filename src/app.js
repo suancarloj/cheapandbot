@@ -257,60 +257,60 @@ bot.dialog('/final', [
     }
 ])
 
-    // const uploadSpeech = (fileUrl, language, API_USER_ID, token, cb) => {
-    //     var formData = {
-    //   	    diarisation: 'true',
-    //   	    model: language,
-    //    	    data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
-    //    	    notification: 'callback',
-    //    	    callback: argv.c
-    // 	}
+const uploadSpeech = (fileUrl, language, API_USER_ID, token, cb) => {
+    var formData = {
+        diarisation: 'true',
+        model: language,
+        data_file: request(fileUrl).pipe(fs.createWriteStream('song.mp3')),
+        notification: 'callback',
+        callback: argv.c
+    }
 
-    // 	//API CALL: Upload file for transcription.
-    // 	var apiUploadURL = 'https://api.speechmatics.com/v1.0/user/' + API_USER_ID + '/jobs/?auth_token=' + token;
+    //API CALL: Upload file for transcription.
+    var apiUploadURL = 'https://api.speechmatics.com/v1.0/user/' + API_USER_ID + '/jobs/?auth_token=' + token;
 
-    // 	request.post({url: apiUploadURL, formData: formData}, function (error, response, body) {
-    // 	    if (error) {
-    //             console.log('\nREQUEST ERROR:', error);
-    //             cb(error ,null);
-    // 	        return ;
-    // 	    }
+    request.post({url: apiUploadURL, formData: formData}, function (error, response, body) {
+        if (error) {
+            console.log('\nREQUEST ERROR:', error);
+            cb(error ,null);
+            return ;
+        }
 
-    // 	    try {
-    // 	        var json = JSON.parse(body);
-    // 	        if (json['error']) {
-    //                  console.log('\nAPI ERROR', json['error']);
-    //                  cb(json['error'],null);
-    //                  return ;
-    // 	        }
-    //             console.log('#########################################################')
-    //             console.log('response speech',json)
-    //             console.log('#########################################################')
-    //             cb(null, json);
-    // 	    } catch (parseError) {
-    //              console.log('\nPARSE ERROR', parseError);
-    //              cb(parseError,null);
-    // 	        return ;
-    // 	    }
+        try {
+            var json = JSON.parse(body);
+            if (json['error']) {
+                    console.log('\nAPI ERROR', json['error']);
+                    cb(json['error'],null);
+                    return ;
+            }
+            console.log('#########################################################')
+            console.log('response speech',json)
+            console.log('#########################################################')
+            cb(null, json);
+        } catch (parseError) {
+                console.log('\nPARSE ERROR', parseError);
+                cb(parseError,null);
+            return ;
+        }
 
-    // 	    console.log('\nSpeechmatics job uploaded. Job ID:', json['id']);
-    // 	});
+        console.log('\nSpeechmatics job uploaded. Job ID:', json['id']);
+    });
 
-    // }
+}
 bot.dialog('/speech', [
     function(session, result, next){
         builder.Prompts.attachment(session, "Upload a audio for me to transform.");
     },
     function(session,result, next){
         console.log("res", result.response);
-        // const token = 'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw';
-        // uploadSpeech(result.response.contentUrl,'en-US', 8967, token, (err,res) => {
-        //     if (err) {
-        //         sessiond.send("We had a error to upload ")
-        //     } else {
-        //         session.send(' Success ', JSON.stringify(res,null,2));
-        //     }
-        // });
+        const token = 'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw';
+        uploadSpeech(result.response.contentUrl,'en-US', 8967, token, (err,res) => {
+            if (err) {
+                sessiond.send("We had a error to upload ")
+            } else {
+                session.send(' Success ', JSON.stringify(res,null,2));
+            }
+        });
         //session.endDialog('That is it, I will contact you ');
     }
 ])
