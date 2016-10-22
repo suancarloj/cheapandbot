@@ -66,15 +66,17 @@ var heroCardBuilder = function heroCardBuilder(session) {
     };
 };
 
-bot.use(function (session, next) {
-    console.log(session);
-    if (session.message.text === '/deleteprofile') {
-        console.log('delte profile');
-        session.perUserInConversationData = {};
-        session.userData = {};
-        session.conversationData = {};
+bot.use({
+    firstRun: function firstRun(session, next) {
+        console.log(session);
+        if (session.message.text === '/deleteprofile') {
+            console.log('delte profile');
+            session.perUserInConversationData = {};
+            session.userData = {};
+            session.conversationData = {};
+        }
+        next();
     }
-    next();
 });
 
 bot.dialog('/', [function (session) {
