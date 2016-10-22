@@ -86,7 +86,7 @@ function (session) {
     }
     session.userData.selected.push(kvPair[1]);
     session.userData.firstTime = false;
-    session.beginDialog('/cheap-step4');
+    session.beginDialog('/cheap-step2');
 }]);
 
 bot.dialog('/cheap-step2', [/* Step 2*/
