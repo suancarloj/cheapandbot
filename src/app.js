@@ -115,7 +115,7 @@ bot.dialog('/cheap', [
         next();     
     },
     /* Step 2*/
-    function(){
+    function(session, results, next){
          session.send("What do you wear to work? ")
 
         const msg = new builder.Message(session)
@@ -166,7 +166,7 @@ bot.dialog('/cheap', [
 
 bot.dialog('/cheap-casual', [
     /* Step cheap casual part */
-    function (session) {
+    function (session, results, next) {
         session.send('What do you like to wear in your free time?');
          
     },
@@ -178,7 +178,7 @@ bot.dialog('/cheap-casual', [
 
 bot.dialog('/cheap-business', [
     /* Step cheap business part */
-    function (session) {
+    function(session, results, next) {
         session.send('What do you like to wear in your free time?');
          
     },

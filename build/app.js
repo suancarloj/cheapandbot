@@ -82,7 +82,7 @@ function (session) {
     next();
 },
 /* Step 2*/
-function () {
+function (session, results, next) {
     session.send("What do you wear to work? ");
 
     var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments([new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2045_728x972_business.pjpeg").tap(builder.CardAction.imBack(session, "business"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/work_relaxed_2.pjpeg").tap(builder.CardAction.imBack(session, "casual"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/dt-2045_728x972_modernclassic02.pjpeg").tap(builder.CardAction.imBack(session, "business"))]), new builder.HeroCard(session).images([builder.CardImage.create(session, "https://www.outfittery.com/funnels/new/img/thumb__questionnaire_picture/work_casual.pjpeg").tap(builder.CardAction.imBack(session, "casual"))])]);
@@ -102,12 +102,12 @@ function () {
 
 bot.dialog('/cheap-casual', [
 /* Step cheap casual part */
-function (session) {
+function (session, results, next) {
     session.send('What do you like to wear in your free time?');
 }, function (session, results, next) {}]);
 
 bot.dialog('/cheap-business', [
 /* Step cheap business part */
-function (session) {
+function (session, results, next) {
     session.send('What do you like to wear in your free time?');
 }, function (session, results, next) {}]);
