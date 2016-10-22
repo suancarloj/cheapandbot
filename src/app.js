@@ -204,7 +204,7 @@ bot.dialog('/cheap-step3',[/* Step 3 : Shoes*/
         }
 
         session.send('Oh daam, we feel bad that you find nothing :( ')
-        builder.Prompts.confirm(session, 'So, Could you specify what kinds of shoes you like ?');   
+        builder.Prompts.text(session, 'So, Could you specify what kinds of shoes you like ?');   
     },
     function (session, results, next) {
         session.send('Thanks for the informations, we will use it');
