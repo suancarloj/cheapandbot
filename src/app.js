@@ -75,7 +75,9 @@ bot.use({
         if (session.message.text === '/deleteprofile') {
             session.reset();
             session.perUserInConversationData = {};
-            session.userData = {};
+            session.userData = {
+                firstTime: true
+            };
             session.conversationData = {};
             session.sessionState = {};
             session.save();
@@ -90,9 +92,10 @@ bot.dialog('/', [
         if (session.userData.firstTime) {
             builder.Prompts.confirm(session, 
                 `Hello!
-                I'm Cheapandbot, your personal stylist assistant. 👒👟👡👕👔👗👘
+                I'm Chip the bot, your personal stylist assistant. 👒👟👡👕👔👗👘
                 To find you the best style, I need to know you. 😄
-                So, for this purpose, I will ask several questions`);
+                So, for this purpose, I will ask several questions`
+            );
         } else {
             session.send('Welcome back Sir,  are you looking for a new outfit ?');
             session.beginDialog('/cheap');
@@ -121,7 +124,7 @@ bot.dialog('/cheap', [
         ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder(session)));
+            .attachments(images.map(heroCardBuilder(session, 'I think we have the same taste ;)')));
         builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
     },
     function (session, results, next) {
@@ -149,7 +152,7 @@ bot.dialog('/cheap-step2', [ /* Step 2*/
         ]
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder(session)));
+            .attachments(images.map(heroCardBuilder(session, 'OMG! I wear the same kind of clothes at work too')));
         builder.Prompts.choice(session, msg, "casual|business");
     },
     function (session, results, next) {
@@ -188,7 +191,7 @@ bot.dialog('/cheap-step3', [ /* Step 3 : Shoes*/
         }
     },
     function (session, results, next) {
-        session.send('Thanks for the informations, we will use it');
+        session.send('Thanks for the informations, we will take it into account');
         const response = results.response;
         session.userData.selected.push(response);
         session.send('Great we can continue the inception');
@@ -208,7 +211,7 @@ bot.dialog('/cheap-step4', [
 
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder(session, 'Never')));
+            .attachments(images.map(heroCardBuilder(session, 'I see')));
         builder.Prompts.choice(session, msg, getImageValues(images));
         // session.endConversation()
     },
@@ -231,7 +234,7 @@ bot.dialog('/cheap-step-5', [
 
         const msg = new builder.Message(session)
             .attachmentLayout(builder.AttachmentLayout.carousel)
-            .attachments(images.map(heroCardBuilder(session, 'Favorite')));
+            .attachments(images.map(heroCardBuilder(session, 'You seem to like the good stuff')));
         builder.Prompts.choice(session, msg, getImageValues(images));
     },
     function (session, results, next) {

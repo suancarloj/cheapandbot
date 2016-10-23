@@ -81,7 +81,9 @@ bot.use({
         if (session.message.text === '/deleteprofile') {
             session.reset();
             session.perUserInConversationData = {};
-            session.userData = {};
+            session.userData = {
+                firstTime: true
+            };
             session.conversationData = {};
             session.sessionState = {};
             session.save();
@@ -93,7 +95,7 @@ bot.use({
 bot.dialog('/', [function (session) {
 
     if (session.userData.firstTime) {
-        builder.Prompts.confirm(session, 'Hello!\n                I\'m Cheapandbot, your personal stylist assistant. \uD83D\uDC52\uD83D\uDC5F\uD83D\uDC61\uD83D\uDC55\uD83D\uDC54\uD83D\uDC57\uD83D\uDC58\n                To find you the best style, I need to know you. \uD83D\uDE04\n                So, for this purpose, I will ask several questions');
+        builder.Prompts.confirm(session, 'Hello!\n                I\'m Chip the bot, your personal stylist assistant. \uD83D\uDC52\uD83D\uDC5F\uD83D\uDC61\uD83D\uDC55\uD83D\uDC54\uD83D\uDC57\uD83D\uDC58\n                To find you the best style, I need to know you. \uD83D\uDE04\n                So, for this purpose, I will ask several questions');
     } else {
         session.send('Welcome back Sir,  are you looking for a new outfit ?');
         session.beginDialog('/cheap');
@@ -114,7 +116,7 @@ function (session) {
     session.send('What do you like to wear in your free time?');
     // Ask the user to select an item from a carousel.
     var images = [{ url: baseUrl + '/dt-2360_728x972_e.pjpeg', value: 'select:100' }, { url: baseUrl + '/dt-2360_728x972_d.pjpeg', value: 'select:101' }, { url: baseUrl + '/dt-2360_728x972_c.pjpeg', value: 'select:102' }];
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session)));
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'I think we have the same taste ;)')));
     builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
 }, function (session, results, next) {
     var action, item;
@@ -131,7 +133,7 @@ bot.dialog('/cheap-step2', [/* Step 2*/
 function (session, results, next) {
     session.send("What do you wear to work? ");
     var images = [{ url: baseUrl + '/dt-2045_728x972_business.pjpeg', value: 'business' }, { url: baseUrl + '/work_relaxed_2.pjpeg', value: 'casual' }, { url: baseUrl + '/dt-2045_728x972_modernclassic02.pjpeg', value: 'business' }, { url: baseUrl + '/work_casual.pjpeg', value: 'casual' }];
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session)));
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'OMG! I wear the same kind of clothes at work too')));
     builder.Prompts.choice(session, msg, "casual|business");
 }, function (session, results, next) {
     var response = results.response.entity;
@@ -158,7 +160,7 @@ function (session, results, next) {
         builder.Prompts.text(session, 'So, Could you specify what kinds of shoes you like ?');
     }
 }, function (session, results, next) {
-    session.send('Thanks for the informations, we will use it');
+    session.send('Thanks for the informations, we will take it into account');
     var response = results.response;
     session.userData.selected.push(response);
     session.send('Great we can continue the inception');
@@ -169,7 +171,7 @@ bot.dialog('/cheap-step4', [function (session, result, next) {
     session.send('What would you never wear?');
     var images = [{ url: baseUrl + '/dt-2360_bittenicht_polo.pjpeg', value: 'polo' }, { url: baseUrl + '/dt-2360_bitte-nicht-teile_coloured-chino.pjpeg', value: 'chino' }, { url: baseUrl + '/dt-2438_bittenicht_shorts.pjpeg', value: 'shorts' }, { url: baseUrl + '/dt-2360_bittenicht_bottom-down.pjpeg', value: 'down' }];
 
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'Never')));
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'I see')));
     builder.Prompts.choice(session, msg, getImageValues(images));
     // session.endConversation()
 }, function (session, results, next) {
@@ -182,7 +184,7 @@ bot.dialog('/cheap-step-5', [function (session, result, next) {
     session.send('Which brands do you like?');
     var images = [{ url: baseUrl + '/_0038_bugatti.pjpeg', value: 'bugatti' }, { url: baseUrl + '/_0055_lee.pjpeg', value: 'lee' }, { url: baseUrl + '/_0040_gstar_raw.pjpeg', value: 'gstar-raw' }, { url: baseUrl + '/_0032_tommy_hilfiger.pjpeg', value: 'tommy-hilfiger' }];
 
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'Favorite')));
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'You seem to like the good stuff')));
     builder.Prompts.choice(session, msg, getImageValues(images));
 }, function (session, results, next) {
     console.log(results.response);
