@@ -88,10 +88,14 @@ bot.dialog('/', [
     function (session) {
 
         if (session.userData.firstTime) {
-            builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
+            builder.Prompts.confirm(session, 
+                `Hello!
+                I'm Cheapandbot, your personal stylist assistant. 👒👟👡👕👔👗👘
+                To find you the best style, I need to know you. 😄
+                So, for this purpose, I will ask several questions`);
         } else {
-            session.send('Welcome back Sir,  Are your looking for a new outfit ?');
-            session.beginDialog('/speech');
+            session.send('Welcome back Sir,  are you looking for a new outfit ?');
+            session.beginDialog('/cheap');
         }
     },
     function (session, results) {
@@ -100,7 +104,7 @@ bot.dialog('/', [
         if (!response) {
             session.endDialog();
         } else {
-            session.beginDialog('/speech');
+            session.beginDialog('/cheap');
         }
     }
 ]);
@@ -151,7 +155,8 @@ bot.dialog('/cheap-step2', [ /* Step 2*/
     function (session, results, next) {
         const response = results.response.entity;
         const CASUAL = 'casual';
-        const business = 'business'
+        const business = 'business';
+        
         session.userData.selected.push(response);
         session.beginDialog('/cheap-step3');
 
@@ -176,7 +181,7 @@ bot.dialog('/cheap-step3', [ /* Step 3 : Shoes*/
         const response = results.response.entity;
 
         if (response !== 'dislike') {
-            session.beginDialog('/cheap-step4');
+            session.replaceDialog('/cheap-step4');
         } else {
             session.send('Oh daam, we feel bad that you find nothing :( ')
             builder.Prompts.text(session, 'So, Could you specify what kinds of shoes you like ?');
@@ -251,7 +256,6 @@ bot.dialog('/cheap-step-6', [
 bot.dialog('/final', [
     function (session, result, next) {
         session.endDialog('That is it, I will contact you ');
-
     },
     function (session, results, next) {
         

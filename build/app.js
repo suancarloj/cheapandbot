@@ -93,10 +93,10 @@ bot.use({
 bot.dialog('/', [function (session) {
 
     if (session.userData.firstTime) {
-        builder.Prompts.confirm(session, 'Hi! Are your looking for a new outfit ?');
+        builder.Prompts.confirm(session, 'Hello!\n                I\'m Cheapandbot, your personal stylist assistant. \uD83D\uDC52\uD83D\uDC5F\uD83D\uDC61\uD83D\uDC55\uD83D\uDC54\uD83D\uDC57\uD83D\uDC58\n                To find you the best style, I need to know you. \uD83D\uDE04\n                So, for this purpose, I will ask several questions');
     } else {
-        session.send('Welcome back Sir,  Are your looking for a new outfit ?');
-        session.beginDialog('/speech');
+        session.send('Welcome back Sir,  are you looking for a new outfit ?');
+        session.beginDialog('/cheap');
     }
 }, function (session, results) {
     var response = results.response;
@@ -104,7 +104,7 @@ bot.dialog('/', [function (session) {
     if (!response) {
         session.endDialog();
     } else {
-        session.beginDialog('/speech');
+        session.beginDialog('/cheap');
     }
 }]);
 
@@ -137,6 +137,7 @@ function (session, results, next) {
     var response = results.response.entity;
     var CASUAL = 'casual';
     var business = 'business';
+
     session.userData.selected.push(response);
     session.beginDialog('/cheap-step3');
 }]);
@@ -151,7 +152,7 @@ function (session, results, next) {
     var response = results.response.entity;
 
     if (response !== 'dislike') {
-        session.beginDialog('/cheap-step4');
+        session.replaceDialog('/cheap-step4');
     } else {
         session.send('Oh daam, we feel bad that you find nothing :( ');
         builder.Prompts.text(session, 'So, Could you specify what kinds of shoes you like ?');
