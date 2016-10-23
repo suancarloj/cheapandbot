@@ -289,7 +289,8 @@ bot.dialog('/speech', [function (session, result, next) {
                         if (err) {
                             session.send('There was an error with your');
                         } else {
-                            session.send('Success  ' + JSON.Stringify(response, null, 2));
+                            var message = response.words.join(' ');
+                            session.send('Success  ' + message);
                         }
                     });
                 }

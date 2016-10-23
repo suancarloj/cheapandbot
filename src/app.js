@@ -353,7 +353,8 @@ bot.dialog('/speech', [
                             if (err) {
                                 session.send('There was an error with your');
                             } else {
-                                session.send(`Success  ${JSON.Stringify(response, null, 2)}`);
+                                const message = response.words.join(' ');
+                                session.send(`Success  ${message}`);
                             }
                         })
                     }
