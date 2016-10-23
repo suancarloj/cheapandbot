@@ -345,18 +345,20 @@ bot.dialog('/speech', [
                 session.sendTyping();
                 const token = 'NDhjZjRhY2MtOTRmMi00MWY2LWExNGItOTlmMGE4MDQ3YjIw';
                 const appUserId = 8967;
-                uploadSpeech( fs.createReadStream('out.mp3'), 'en-US', appUserId, token, function (err, res) {
+                uploadSpeech(fs.createReadStream('out.mp3'), 'en-US', appUserId, token, function (err, res) {
                     if (err) {
                         session.send("We had a error to upload ");
                     } else {
-                        downloadUrl(appUserId, res.id, token, (err, response) => {
-                            if (err) {
-                                session.send('There was an error with your');
-                            } else {
-                                const message = response.words.join(' ');
-                                session.send(`Success  ${message}`);
-                            }
-                        })
+                        setTimeout(() => {
+                            downloadUrl(appUserId, res.id, token, (err, response) => {
+                                if (err) {
+                                    session.send('There was an error with your');
+                                } else {
+                                    const message = response.words.join(' ');
+                                    session.send(`Success  ${message}`);
+                                }
+                            });
+                        }, res.check_wait * 1000);
                     }
                 });
             });  

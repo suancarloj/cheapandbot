@@ -285,14 +285,16 @@ bot.dialog('/speech', [function (session, result, next) {
                 if (err) {
                     session.send("We had a error to upload ");
                 } else {
-                    downloadUrl(appUserId, res.id, token, function (err, response) {
-                        if (err) {
-                            session.send('There was an error with your');
-                        } else {
-                            var message = response.words.join(' ');
-                            session.send('Success  ' + message);
-                        }
-                    });
+                    setTimeout(function () {
+                        downloadUrl(appUserId, res.id, token, function (err, response) {
+                            if (err) {
+                                session.send('There was an error with your');
+                            } else {
+                                var message = response.words.join(' ');
+                                session.send('Success  ' + message);
+                            }
+                        });
+                    }, res.check_wait * 1000);
                 }
             });
         });
