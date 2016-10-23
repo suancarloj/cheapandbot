@@ -354,7 +354,7 @@ bot.dialog('/speech', [
                                 if (err) {
                                     session.send('There was an error with your');
                                 } else {
-                                    const message = response.words.join(' ');
+                                    const message = response.words.map(word => word.name).join(' ');
                                     session.send(`Success  ${message}`);
                                 }
                             });
