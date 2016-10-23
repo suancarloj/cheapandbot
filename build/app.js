@@ -66,7 +66,7 @@ var heroCardBuilder = function heroCardBuilder(session) {
         if (image.subtitle) {
             card.subtitle(image.subtitle);
         }
-        return card.images([builder.CardImage.create(session, image.url)]).buttons([builder.CardAction.imBack(session, image.value, buttonText)]);
+        return card.images([builder.CardImage.create(session, image.url)]).buttons([builder.CardAction.imBack(session, image.value, image.text || buttonText)]);
     };
 };
 
@@ -87,25 +87,31 @@ bot.use({
             session.conversationData = {};
             session.sessionState = {};
             session.save();
+            session.endConversation('See you');
+        } else if (!session.userData.firstRun) {
+            session.userData.firstRun = true;
+            session.beginDialog('/firstRun');
+        } else {
+            next();
         }
-        next();
     }
 });
 
-bot.dialog('/', [function (session) {
+bot.dialog('/firstRun', [function (session) {
+    session.sendTyping();
+    session.send('Hello!');
+    session.sendTyping();
+    session.send("I'm Chip the bot, your personal stylist assistant. 👒👟👡👕👔👗👘");
+    session.sendTyping();
+    session.send('To find you the best style, I need to know you. 😄');
+    session.sendTyping();
+    session.send('So, for this purpose, I will ask several questions');
+    session.replaceDialog('/cheap');
+}]);
 
-    if (session.userData.firstTime) {
-        builder.Prompts.confirm(session, 'Hello!\n                I\'m Chip the bot, your personal stylist assistant. \uD83D\uDC52\uD83D\uDC5F\uD83D\uDC61\uD83D\uDC55\uD83D\uDC54\uD83D\uDC57\uD83D\uDC58\n                To find you the best style, I need to know you. \uD83D\uDE04\n                So, for this purpose, I will ask several questions');
-    } else {
-        session.send('Welcome back Sir,  are you looking for a new outfit ?');
-        session.beginDialog('/cheap');
-    }
-}, function (session, results) {
-    var response = results.response;
-    //console.log("Response ",response);
-    if (!response) {
-        session.endDialog();
-    } else {
+bot.dialog('/', [function (session) {
+    if (!session.userData.firstRun) {
+        session.send('Welcome back Sir, are you looking for a new outfit ?');
         session.beginDialog('/cheap');
     }
 }]);
@@ -115,8 +121,8 @@ bot.dialog('/cheap', [
 function (session) {
     session.send('What do you like to wear in your free time?');
     // Ask the user to select an item from a carousel.
-    var images = [{ url: baseUrl + '/dt-2360_728x972_e.pjpeg', value: 'select:100' }, { url: baseUrl + '/dt-2360_728x972_d.pjpeg', value: 'select:101' }, { url: baseUrl + '/dt-2360_728x972_c.pjpeg', value: 'select:102' }];
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'I think we have the same taste ;)')));
+    var images = [{ url: baseUrl + '/dt-2360_728x972_e.pjpeg', value: 'select:100', text: 'I work all the time' }, { url: baseUrl + '/dt-2360_728x972_d.pjpeg', value: 'select:101', text: "I'm a model" }, { url: baseUrl + '/dt-2360_728x972_c.pjpeg', value: 'select:102', text: "I'm a cool guy" }];
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session)));
     builder.Prompts.choice(session, msg, "select:100|select:101|select:102");
 }, function (session, results, next) {
     var action, item;
@@ -132,8 +138,8 @@ function (session) {
 bot.dialog('/cheap-step2', [/* Step 2*/
 function (session, results, next) {
     session.send("What do you wear to work? ");
-    var images = [{ url: baseUrl + '/dt-2045_728x972_business.pjpeg', value: 'business' }, { url: baseUrl + '/work_relaxed_2.pjpeg', value: 'casual' }, { url: baseUrl + '/dt-2045_728x972_modernclassic02.pjpeg', value: 'business' }, { url: baseUrl + '/work_casual.pjpeg', value: 'casual' }];
-    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'OMG! I wear the same kind of clothes at work too')));
+    var images = [{ url: baseUrl + '/dt-2045_728x972_business.pjpeg', value: 'business', text: "It's all about business for me" }, { url: baseUrl + '/work_relaxed_2.pjpeg', value: 'casual', text: 'I like my style to stay fresh' }, { url: baseUrl + '/dt-2045_728x972_modernclassic02.pjpeg', value: 'business', text: "I'm a modern kind of guy" }, { url: baseUrl + '/work_casual.pjpeg', value: 'casual', text: 'Shirts are my thing!' }];
+    var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session)));
     builder.Prompts.choice(session, msg, "casual|business");
 }, function (session, results, next) {
     var response = results.response.entity;
@@ -147,7 +153,7 @@ function (session, results, next) {
 bot.dialog('/cheap-step3', [/* Step 3 : Shoes*/
 function (session, results, next) {
     session.send("Which shoes would you wear?");
-    var images = [{ url: baseUrl + '/dt-2360_schuhe_sneakers.pjpeg', value: 'basket' }, { url: baseUrl + '/dt-2438_schuhe_boat.pjpeg', value: 'sebago' }, { url: baseUrl + '/dt-2360_schuhe_boots.pjpeg', value: 'boot' }, { url: "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png", subtitle: "I don't like any of these shoes", value: 'dislike' }];
+    var images = [{ url: baseUrl + '/dt-2360_schuhe_sneakers.pjpeg', value: 'basket', text: 'Adidas dude!' }, { url: baseUrl + '/dt-2438_schuhe_boat.pjpeg', value: 'sebago', text: 'Sebago is my thing' }, { url: baseUrl + '/dt-2360_schuhe_boots.pjpeg', value: 'boot', text: 'I like to keep my feets warm' }, { url: "http://counterintuity.com/wp-content/uploads/2015/09/897px-Not_facebook_not_like_thumbs_down.png", subtitle: "I don't like any of these shoes", value: 'dislike', text: 'None of those' }];
     var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session)));
     builder.Prompts.choice(session, msg, getImageValues(images));
 }, function (session, results, next) {
@@ -169,7 +175,7 @@ function (session, results, next) {
 
 bot.dialog('/cheap-step4', [function (session, result, next) {
     session.send('What would you never wear?');
-    var images = [{ url: baseUrl + '/dt-2360_bittenicht_polo.pjpeg', value: 'polo' }, { url: baseUrl + '/dt-2360_bitte-nicht-teile_coloured-chino.pjpeg', value: 'chino' }, { url: baseUrl + '/dt-2438_bittenicht_shorts.pjpeg', value: 'shorts' }, { url: baseUrl + '/dt-2360_bittenicht_bottom-down.pjpeg', value: 'down' }];
+    var images = [{ url: baseUrl + '/dt-2360_bittenicht_polo.pjpeg', value: 'polo', text: "Not from the BW!" }, { url: baseUrl + '/dt-2360_bitte-nicht-teile_coloured-chino.pjpeg', value: 'chino', text: "No Chino's, please" }, { url: baseUrl + '/dt-2438_bittenicht_shorts.pjpeg', value: 'shorts', text: "Shorts" }, { url: baseUrl + '/dt-2360_bittenicht_bottom-down.pjpeg', value: 'down', text: "No shirt!" }];
 
     var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'I see')));
     builder.Prompts.choice(session, msg, getImageValues(images));
@@ -182,7 +188,7 @@ bot.dialog('/cheap-step4', [function (session, result, next) {
 
 bot.dialog('/cheap-step-5', [function (session, result, next) {
     session.send('Which brands do you like?');
-    var images = [{ url: baseUrl + '/_0038_bugatti.pjpeg', value: 'bugatti' }, { url: baseUrl + '/_0055_lee.pjpeg', value: 'lee' }, { url: baseUrl + '/_0040_gstar_raw.pjpeg', value: 'gstar-raw' }, { url: baseUrl + '/_0032_tommy_hilfiger.pjpeg', value: 'tommy-hilfiger' }];
+    var images = [{ url: baseUrl + '/_0038_bugatti.pjpeg', value: 'bugatti', text: 'I like expensive stuff' }, { url: baseUrl + '/_0055_lee.pjpeg', value: 'lee', text: 'Lee is the thing' }, { url: baseUrl + '/_0040_gstar_raw.pjpeg', value: 'gstar-raw', text: 'Get me some raw' }, { url: baseUrl + '/_0032_tommy_hilfiger.pjpeg', value: 'tommy-hilfiger', text: 'Tommy !' }];
 
     var msg = new builder.Message(session).attachmentLayout(builder.AttachmentLayout.carousel).attachments(images.map(heroCardBuilder(session, 'You seem to like the good stuff')));
     builder.Prompts.choice(session, msg, getImageValues(images));
@@ -197,6 +203,16 @@ bot.dialog('/cheap-step-6', [function (session, result, next) {
     builder.Prompts.number(session, 'How old do you feel ?');
 }, function (session, results, next) {
     var response = results.response;
+    if (response < 16) {
+        session.send('Ask your mom dude!');
+        var msg = new builder.Message(session).attachments([{
+            contentType: 'image/jpeg',
+            contentUrl: 'https://cdn.meme.am/instances/500x/30373650.jpg'
+        }]);
+        session.endDialog(msg);
+        session.endConversation();
+        return;
+    }
     session.userData.selected.push(response);
     session.beginDialog('/final');
 }]);
